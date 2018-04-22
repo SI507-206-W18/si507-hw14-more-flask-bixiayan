@@ -1,9 +1,10 @@
+
 from flask import Flask, render_template, request, redirect
 import model
 
 app = Flask(__name__)
-
-@app.route("/")
+# don't use anymore
+@app.route("/old")
 def index():
     ## print the guestbook
     return render_template("index.html", entries=model.get_entries())
@@ -19,6 +20,19 @@ def postentry():
     message = request.form["message"]
     model.add_entry(name, message)
     return redirect("/")
+
+@app.route("/")
+def addmin():
+    ## add a guestbook entry
+    return render_template("admin.html", entries=model.get_entries())
+
+
+@app.route("/delete", methods=["POST"])
+def delete():
+    __id = request.form["id"]
+    model.delete_entry(__id)
+    return redirect("/")
+
 
 if __name__=="__main__":
     model.init()
